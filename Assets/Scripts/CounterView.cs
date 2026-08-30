@@ -2,7 +2,7 @@ using System;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class MouseInputHandler : MonoBehaviour
+public class CounterView : MonoBehaviour
 {
     [SerializeField] private Counter _counter;
 

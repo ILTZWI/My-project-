@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Counter : MonoBehaviour
 {
+    [SerializeField] private MouseInput _mouseInput;
     [SerializeField] private float _countInterval = 0.05f;
 
     private int _count = 0;
@@ -18,15 +19,22 @@ public class Counter : MonoBehaviour
         _wait = new WaitForSeconds(_countInterval);
     }
 
-    private void Update()
+    private void OnEnable()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (_isCounting)
-                StopCounter();
-            else
-                StartCounter();
-        }
+        _mouseInput.Clicked += OnMouseClicked;
+    }
+
+    private void OnDisable()
+    {
+        _mouseInput.Clicked -= OnMouseClicked;
+    }
+
+    private void OnMouseClicked()
+    {
+        if (_isCounting)
+            StopCounter();
+        else
+            StartCounter();
     }
 
     private void StartCounter()
