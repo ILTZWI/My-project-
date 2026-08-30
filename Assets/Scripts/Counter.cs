@@ -1,26 +1,31 @@
+using System;
 using System.Collections;
-using System.Threading;
-using TMPro;
 using UnityEngine;
 
 public class Counter : MonoBehaviour
 {
+    [SerializeField] private float _countInterval = 0.05f;
+
     private int _count = 0;
     private bool _isCounting = false;
     private Coroutine _coroutine;
+    private WaitForSeconds _wait;
+
+    public event Action<int> CountChanged;
+
+    private void Awake()
+    {
+        _wait = new WaitForSeconds(_countInterval);
+    }
 
     private void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
-            if(_isCounting)
-            {
+            if (_isCounting)
                 StopCounter();
-            }
-            else 
-            {
+            else
                 StartCounter();
-            }
         }
     }
 
@@ -41,13 +46,15 @@ public class Counter : MonoBehaviour
         }
     }
 
+
     private IEnumerator CountCoroutine()
     {
         while (_isCounting)
         {
-            yield return new WaitForSeconds(0.5f);
             _count++;
-            Debug.Log("Счетчик :" + _count);
+            yield return _wait;
+
+            CountChanged?.Invoke(_count);
         }
     }
 }
