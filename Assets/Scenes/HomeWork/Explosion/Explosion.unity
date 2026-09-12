@@ -530,7 +530,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e267b01778700b429f7bc4b5431f95f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spawner
-  _cubePrefab: {fileID: 431580219}
+  _cubePrefab: {fileID: 431580226}
   _minSpawnCount: 2
   _maxSpawnCount: 6
   _painter: {fileID: 431580227}

@@ -1,14 +1,24 @@
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
 
-public class CubeClickHandler : MonoBehaviour
+public class Cube : MonoBehaviour
 {
     [SerializeField] private Spawner _spawner;
     [SerializeField] private Explosion _explosion;
 
+    private Renderer _renderer;
+
     private int _chanceMax = 100;
     private int _currentChance = 100;
     private int _reduction = 2;
+
+    private void Awake()
+    {
+        _renderer = GetComponent<Renderer>();
+
+        if (_renderer == null)
+            return;
+    }
 
     private void OnMouseDown()
     {
@@ -20,9 +30,10 @@ public class CubeClickHandler : MonoBehaviour
         }
         else 
         {
-            Destroy(gameObject);
             _explosion.BlowUp();
         }
+
+            Destroy(gameObject);
     }
 
     private bool Divide()
@@ -41,5 +52,13 @@ public class CubeClickHandler : MonoBehaviour
     public void SetChance(int chance)
     {
         _currentChance = chance;
+    }
+
+    public void SetMaterial(Material material)
+    {
+        if (material == null)
+            return;
+
+        _renderer.material = material;
     }
 }

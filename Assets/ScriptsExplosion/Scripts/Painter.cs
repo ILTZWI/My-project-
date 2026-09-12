@@ -5,12 +5,14 @@ public class Painter : MonoBehaviour
 {
     [SerializeField] private List<Material> _materials;
 
-    public void Paint(GameObject cube)
+    public void Paint(Cube cube)
     {
         int randomIndex = Random.Range(0, _materials.Count);
 
         Material material = _materials[randomIndex];
 
         cube.GetComponent<Renderer>().material = material;
+
+        cube.SetMaterial(material);
     }
 }
