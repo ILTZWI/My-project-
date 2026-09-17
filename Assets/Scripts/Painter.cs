@@ -11,8 +11,6 @@ public class Painter : MonoBehaviour
 
         Material material = _materials[randomIndex];
 
-        cube.GetComponent<Renderer>().material = material;
-
-        cube.SetMaterial(material);
+        cube.Renderer.material = material;
     }
 }
