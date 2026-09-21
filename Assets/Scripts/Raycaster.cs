@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class MouseClicker : MonoBehaviour
+public class Raycaster : MonoBehaviour
 {
     [SerializeField] private Camera _camera;
     [SerializeField] private InputHandler _handler;
@@ -18,9 +18,10 @@ public class MouseClicker : MonoBehaviour
         _handler.Clicked -= OnClickMouseDown;
     }
 
-    public void OnClickMouseDown()
+    public void OnClickMouseDown(Vector3 mousePosition)
     {
-        Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
+        Ray ray = _camera.ScreenPointToRay(mousePosition);
+
         if(IsHitCube(ray,out Cube cube))
             Detecting?.Invoke(cube);
     }

@@ -3,13 +3,15 @@ using UnityEngine;
 
 public class InputHandler : MonoBehaviour
 {
-    public event Action Clicked;
+    public event Action<Vector3> Clicked;
+
+    private int Button = 0;
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(Button))
         {
-            Clicked?.Invoke();
+            Clicked?.Invoke(Input.mousePosition);
         }
     }
 }

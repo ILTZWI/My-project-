@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
@@ -9,20 +10,11 @@ public class Spawner : MonoBehaviour
     [SerializeField] private int _maxСhance = 100;
     [SerializeField, Min(1)] private int _reduction = 2;
     [SerializeField] private Painter _painter;
-    [SerializeField] private MouseClicker _mouseClicker;
-    [SerializeField] private Exploder _exploder;
 
-    private void OnEnable()
-    {
-        _mouseClicker.Detecting += OnCubeDetected;
-    }
+    public event Action<Vector3,Cube> Spawned;
+    public event Action<Vector3, float> BlowUped;
 
-    private void OnDisable()
-    {
-        _mouseClicker.Detecting -= OnCubeDetected;
-    }
-
-    public void Split(Cube clickedCube)
+    public void Spawn(Cube clickedCube, Vector3 cubeScale)
     {
         int randomNumber = UnityEngine.Random.Range(_minСhance, _maxСhance + 1);
 
@@ -34,26 +26,21 @@ public class Spawner : MonoBehaviour
             {
                 Cube cube = Instantiate(_cubePrefab, clickedCube.transform.position, Quaternion.identity);
 
-                Vector3 newScale = clickedCube.transform.localScale / _reduction;
+                Vector3 newScale = cubeScale;
                 cube.transform.localScale = newScale;
 
                 float newChance = clickedCube.CurrentСhance / _reduction;
                 cube.SetChanceValue(newChance);
 
                 _painter.Paint(cube);
-                _exploder.ApplyKnockback(clickedCube.transform.position, cube.Rigidbody, 1f / clickedCube.transform.localScale.x);
+                Spawned?.Invoke(clickedCube.transform.position,cube);
             }
         }
         else 
         {
-            _exploder.Explode(clickedCube.transform.position,1f / clickedCube.transform.localScale.x );
+            BlowUped?.Invoke(clickedCube.transform.position, 1f / clickedCube.transform.localScale.x);
         }
 
         Destroy(clickedCube.gameObject);
-    }
-
-    private void OnCubeDetected(Cube clickedCube)
-    {
-        Split(clickedCube);
     }
 }
