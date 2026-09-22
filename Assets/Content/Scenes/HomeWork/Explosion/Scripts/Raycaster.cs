@@ -6,7 +6,7 @@ public class Raycaster : MonoBehaviour
     [SerializeField] private Camera _camera;
     [SerializeField] private InputHandler _handler;
 
-    public Action<Cube> Detecting;
+    public Action<Cube_1> Detecting;
 
     private void OnEnable()
     {
@@ -22,11 +22,11 @@ public class Raycaster : MonoBehaviour
     {
         Ray ray = _camera.ScreenPointToRay(mousePosition);
 
-        if(IsHitCube(ray,out Cube cube))
+        if(IsHitCube(ray,out Cube_1 cube))
             Detecting?.Invoke(cube);
     }
 
-    public bool IsHitCube(Ray ray, out Cube cube)
+    public bool IsHitCube(Ray ray, out Cube_1 cube)
     {
         cube = default;
         

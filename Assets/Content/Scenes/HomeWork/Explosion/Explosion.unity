@@ -217,8 +217,6 @@ MonoBehaviour:
   "_max\u0421hance": 100
   _reduction: 2
   _painter: {fileID: 1037615482}
-  _mouseClicker: {fileID: 1962796924}
-  _exploder: {fileID: 79822266}
 --- !u!1 &112333750
 GameObject:
   m_ObjectHideFlags: 0
@@ -331,6 +329,54 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 112333750}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &269518559
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 269518560}
+  - component: {fileID: 269518561}
+  m_Layer: 0
+  m_Name: Spliter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &269518560
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 269518559}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.06678, y: -10.50884, z: -14.50051}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 856797870}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &269518561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 269518559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 710eb259036380149b51e5f28a638e88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Spliter
+  _raycaster: {fileID: 1962796926}
+  _exploder: {fileID: 79822266}
+  _spawner: {fileID: 101920312}
+  _separator: 1
 --- !u!1 &426201077
 GameObject:
   m_ObjectHideFlags: 0
@@ -458,7 +504,7 @@ GameObject:
   - component: {fileID: 431580224}
   - component: {fileID: 431580226}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Cube 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -836,7 +882,7 @@ GameObject:
   - component: {fileID: 672349101}
   - component: {fileID: 672349100}
   m_Layer: 0
-  m_Name: Cube (2)
+  m_Name: Cube 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -990,7 +1036,7 @@ GameObject:
   - component: {fileID: 855132368}
   - component: {fileID: 855132367}
   m_Layer: 0
-  m_Name: Cube (4)
+  m_Name: Cube 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1162,6 +1208,7 @@ Transform:
   - {fileID: 1037615481}
   - {fileID: 101920311}
   - {fileID: 1962796925}
+  - {fileID: 269518560}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1037615480
@@ -1603,7 +1650,7 @@ GameObject:
   - component: {fileID: 1816993884}
   - component: {fileID: 1816993883}
   m_Layer: 0
-  m_Name: Cube (3)
+  m_Name: Cube 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1757,7 +1804,7 @@ GameObject:
   - component: {fileID: 1897409131}
   - component: {fileID: 1897409130}
   m_Layer: 0
-  m_Name: Cube (1)
+  m_Name: Cube 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1905,10 +1952,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1962796925}
-  - component: {fileID: 1962796924}
   - component: {fileID: 1962796923}
+  - component: {fileID: 1962796926}
   m_Layer: 0
-  m_Name: ReadInput
+  m_Name: Raycaster
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1926,20 +1973,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 482ac46d388dd0c4292cf2af354fc07d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputHandler
---- !u!114 &1962796924
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1962796922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3cdbcbdffb76ddf43a9c8e4921ee5e97, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MouseClicker
-  _camera: {fileID: 1220188260}
-  _handler: {fileID: 1962796923}
 --- !u!4 &1962796925
 Transform:
   m_ObjectHideFlags: 0
@@ -1955,6 +1988,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 856797870}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1962796926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1962796922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d85d47991e363b4096c895805b3f48e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Raycaster
+  _camera: {fileID: 1220188260}
+  _handler: {fileID: 1962796923}
 --- !u!1 &2059045315
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,18 +7,18 @@ public class Spliter : MonoBehaviour
     [SerializeField] private Spawner _spawner;
     [SerializeField] private int _separator = 2;
 
-    public void OnDetected(Cube clickedCube)
+    public void OnDetected(Cube_1 clickedCube)
     {
         _spawner.Spawn(clickedCube,Divide(clickedCube));
     }
 
-    public Vector3 Divide(Cube clickedCube)
+    public Vector3 Divide(Cube_1 clickedCube)
     {
         Vector3 Scale = clickedCube.transform.localScale / _separator;
         return Scale;
     }
 
-    public void Push(Vector3 positionPush,Cube cube)
+    public void Push(Vector3 positionPush,Cube_1 cube)
     {
         _exploder.ApplyKnockback(positionPush,cube.Rigidbody);
     }
