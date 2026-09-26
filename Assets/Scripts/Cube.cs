@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -9,20 +7,13 @@ using UnityEngine.Pool;
 public class Cube : MonoBehaviour
 {
     private ObjectPool<Cube> _pool;
-    private const int _minDelay = 2;
-    private const int _maxDelay = 5;
-
-
-    private Coroutine _coroutine;
-    private WaitForSeconds _wait;
 
     public bool IsTouched { get; private set; }
+    public event Action<Cube> Encountered;
     public Renderer Renderer { get; private set; }
 
     private void Awake()
     {
-        _wait = new WaitForSeconds(UnityEngine.Random.Range(_minDelay, _maxDelay));
-
         Renderer = GetComponent<Renderer>();
     }
 
@@ -33,21 +24,10 @@ public class Cube : MonoBehaviour
             if (IsTouched)
                 return;
 
-            StartDelayedDelteion();
+            Encountered?.Invoke(this);
         }
     }
-
-    private void StartDelayedDelteion()
-    {
-        _coroutine = StartCoroutine(DelayedDeletion());
-    }
-
-    private IEnumerator DelayedDeletion()
-    {
-        yield return _wait;
-        _pool.Release(this);
-    }
-
+    
     public void Activate()
     {
         IsTouched = true;
@@ -56,10 +36,5 @@ public class Cube : MonoBehaviour
     public void Deactivate()
     {
         IsTouched = false;
-    }
-
-    public void SetPool(ObjectPool<Cube> pool)
-    {
-        _pool = pool;
     }
 }
