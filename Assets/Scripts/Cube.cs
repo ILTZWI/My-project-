@@ -1,19 +1,27 @@
 using System;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.Pool;
 
 [RequireComponent(typeof(Renderer))]
 [RequireComponent(typeof(Rigidbody))]
 public class Cube : MonoBehaviour
 {
-    private ObjectPool<Cube> _pool;
+    private const int MinDelay = 2;
+    private const int MaxDelay = 5;
+
+    [SerializeField] private Material _defaultMaterial;
 
     public bool IsTouched { get; private set; }
     public event Action<Cube> Encountered;
+    public event Action<Cube> Released;
     public Renderer Renderer { get; private set; }
+
+    private Coroutine _coroutine;
+    private WaitForSeconds _wait;
 
     private void Awake()
     {
+        _wait = new WaitForSeconds(UnityEngine.Random.Range(MinDelay, MaxDelay));
         Renderer = GetComponent<Renderer>();
     }
 
@@ -25,16 +33,37 @@ public class Cube : MonoBehaviour
                 return;
 
             Encountered?.Invoke(this);
+            Activate();
+            StartDelayedDeleteion();
         }
     }
     
-    public void Activate()
+    private void Activate()
     {
         IsTouched = true;
     }
 
-    public void Deactivate()
+    private void Deactivate()
     {
         IsTouched = false;
+    }
+
+    private void StartDelayedDeleteion()
+    {
+        _coroutine = StartCoroutine(DelayedDeleteion());
+    }
+
+    private IEnumerator DelayedDeleteion()
+    {
+        yield return _wait;
+
+        Released?.Invoke(this);
+    }
+
+    private void ClearParameters()
+    {
+        Renderer.material = _defaultMaterial;
+        transform.position = Vector3.zero;
+        Deactivate();
     }
 }

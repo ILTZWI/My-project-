@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 public class Painter : MonoBehaviour
 {
-    [SerializeField] private Material _defaultMaterial;
     [SerializeField] private List<Material> _materials = new List<Material>();
 
     public void Paint(Cube cube)
@@ -13,11 +12,5 @@ public class Painter : MonoBehaviour
         Material material = _materials[randomIndex];
 
         cube.Renderer.material = material;
-    }
-
-    public void ClearMaterial(Cube cube)
-    {
-        Debug.Log("Домой");
-        cube.Renderer.material = _defaultMaterial;
     }
 }
