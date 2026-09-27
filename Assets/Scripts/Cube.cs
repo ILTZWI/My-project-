@@ -9,20 +9,24 @@ public class Cube : MonoBehaviour
     private const int MinDelay = 2;
     private const int MaxDelay = 5;
 
-    [SerializeField] private Material _defaultMaterial;
-
-    public bool IsTouched { get; private set; }
     public event Action<Cube> Encountered;
     public event Action<Cube> Released;
-    public Renderer Renderer { get; private set; }
+
+    [SerializeField] private Material _defaultMaterial;
 
     private Coroutine _coroutine;
     private WaitForSeconds _wait;
+
+    public Renderer Renderer { get; private set; }
+    public Rigidbody Rigidbody { get; private set; }
+
+    public bool IsTouched { get; private set; } = false;
 
     private void Awake()
     {
         _wait = new WaitForSeconds(UnityEngine.Random.Range(MinDelay, MaxDelay));
         Renderer = GetComponent<Renderer>();
+        Rigidbody = GetComponent<Rigidbody>();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -33,17 +37,16 @@ public class Cube : MonoBehaviour
                 return;
 
             Encountered?.Invoke(this);
-            Activate();
             StartDelayedDeleteion();
         }
     }
-    
-    private void Activate()
+
+    public void Activate()
     {
         IsTouched = true;
     }
 
-    private void Deactivate()
+    public void Deactivate()
     {
         IsTouched = false;
     }
@@ -60,10 +63,11 @@ public class Cube : MonoBehaviour
         Released?.Invoke(this);
     }
 
-    private void ClearParameters()
+    public void ClearParameters()
     {
         Renderer.material = _defaultMaterial;
-        transform.position = Vector3.zero;
-        Deactivate();
+        transform.rotation = Quaternion.identity;
+        Rigidbody.angularVelocity = Vector3.zero;
+        Rigidbody.linearVelocity = Vector3.zero;
     }
 }
