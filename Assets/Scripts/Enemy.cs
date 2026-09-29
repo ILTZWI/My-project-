@@ -23,23 +23,12 @@ public class Enemy : MonoBehaviour
         _wait = new WaitForSeconds(_lifeTime);
         _rigidbody = GetComponent<Rigidbody>();
     }
-
+    
     private void Update()
     {
         Rotate();
         Move();
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.TryGetComponent(out Ground ground))
-        {
-            if (_isTouched)
-                return;
-
-            StartDeletion();
-            _isTouched = true;
-        }
+        StartDelayedDeletion();
     }
 
     public void SetDirection(float direction)
@@ -56,9 +45,23 @@ public class Enemy : MonoBehaviour
         _rigidbody.linearVelocity = Vector3.zero;
     }
 
-    private void StartDeletion()
+    public void StartDelayedDeletion()
     {
         _coroutine = StartCoroutine(DelayedDeleteion());
+    }
+
+    public void StopDelayedDeleteion()
+    {
+        StopCoroutine(DelayedDeleteion());
+    }
+
+    private void Deleteion()
+    {
+        if (_isTouched)
+            return;
+
+        StartDelayedDeletion();
+        _isTouched = true;
     }
 
     private void Move()
