@@ -8,8 +8,6 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float _runSpeed;
     [SerializeField] private float _lifeTime;
 
-    public event Action<Enemy> Released;
-
     private Rigidbody _rigidbody;
     private Coroutine _coroutine;
     private WaitForSeconds _wait;
@@ -18,17 +16,28 @@ public class Enemy : MonoBehaviour
 
     private bool _isTouched = false;
 
+    public event Action<Enemy> Destroyed;
+
     private void Awake()
     {
         _wait = new WaitForSeconds(_lifeTime);
         _rigidbody = GetComponent<Rigidbody>();
     }
-    
+
     private void Update()
     {
-        Rotate();
         Move();
+        Rotate();
+    }
+
+    private void OnEnable()
+    {
         StartDelayedDeletion();
+    }
+
+    private void OnDisable()
+    {
+        StopDelayedDeleteion();
     }
 
     public void SetDirection(float direction)
@@ -52,7 +61,8 @@ public class Enemy : MonoBehaviour
 
     public void StopDelayedDeleteion()
     {
-        StopCoroutine(DelayedDeleteion());
+        if( _coroutine != null)
+            StopCoroutine(DelayedDeleteion());
     }
 
     private void Deleteion()
@@ -66,7 +76,8 @@ public class Enemy : MonoBehaviour
 
     private void Move()
     {
-        transform.position += transform.forward * _runSpeed * Time.deltaTime;
+        Vector3 direction = _runSpeed * transform.forward;
+        _rigidbody.linearVelocity = direction;
     }
 
     private void Rotate()
@@ -78,6 +89,6 @@ public class Enemy : MonoBehaviour
     {
         yield return _wait;
 
-        Released?.Invoke(this);
+        Destroyed?.Invoke(this);
     }
 }

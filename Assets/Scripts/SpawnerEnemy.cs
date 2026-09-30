@@ -4,14 +4,14 @@ using UnityEngine.Pool;
 
 public class SpawnerEnemy : MonoBehaviour
 {
-    [SerializeField] private GameObject _spawnPosition;
+    [SerializeField] private Transform[] _spawnPositions;
     [SerializeField] private Enemy _prefabEnemy;
 
     [SerializeField] private float _delay;
     [SerializeField] private float _direction;
 
-    private ObjectPool<Enemy> _enemyPool;
 
+    private Transform _spawnPosition;
     private Coroutine _coroutine;
     private WaitForSeconds _wait;
 
@@ -20,16 +20,18 @@ public class SpawnerEnemy : MonoBehaviour
     private int _defaultCapacity = 4;
     private int _maxSize = 10;
 
+    private ObjectPool<Enemy> _enemyPool;
+
     private void Awake()
     {
         _wait = new WaitForSeconds(_delay);
 
         _enemyPool = new ObjectPool<Enemy>
-            (
-            createFunc: () => Instantiate(_prefabEnemy),
-            actionOnGet: (enemy) => GetEnemy(enemy),
-            actionOnRelease: (enemy) => Release(enemy),
-            actionOnDestroy: (enemy) => Destroy(enemy),
+        (
+             createFunc: () => Instantiate(_prefabEnemy),
+            actionOnGet: (enemy) => Spawn(enemy),
+            actionOnRelease: (enemy) => Destroy(enemy),
+            actionOnDestroy: (enemy) => Object.Destroy(enemy),
             defaultCapacity: _defaultCapacity,
             maxSize: _maxSize
         );
@@ -37,28 +39,28 @@ public class SpawnerEnemy : MonoBehaviour
 
     private void Start()
     {
+        _enemyPool.Get();
         StartSpawn();
     }
 
-    private void GetEnemy(Enemy enemy)
+    private void Spawn(Enemy enemy)
     {
-        enemy.Released += OnReleased;
-        enemy.SetDirection(_direction);
-        enemy.transform.position = _spawnPosition.transform.position;
+        enemy.transform.position = _spawnPosition.position;
 
+        enemy.Destroyed += OnDestroyed;
+        enemy.SetDirection(_direction);
         enemy.gameObject.SetActive(true);
     }
-
-    private void OnReleased(Enemy enemy)
+    private void Destroy(Enemy enemy)
     {
-        _enemyPool.Release(enemy);
-    }
-
-    private void Release(Enemy enemy)
-    {
-        enemy.Released -= OnReleased;
+        enemy.Destroyed -= OnDestroyed;
         enemy.ClearParameters();
         enemy.gameObject.SetActive(false);
+    }
+
+    private void OnDestroyed(Enemy enemy)
+    {
+        _enemyPool.Release(enemy);
     }
 
     private void StartSpawn()
@@ -71,7 +73,6 @@ public class SpawnerEnemy : MonoBehaviour
         while (_isRun)
         {
             yield return _wait;
-
             _enemyPool.Get();
         }
     }

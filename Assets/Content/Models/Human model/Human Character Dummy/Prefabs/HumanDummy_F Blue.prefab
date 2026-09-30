@@ -122,7 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6a79e7050c75ec47afac19d72f7b77b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
-  _runSpeed: 4
+  _runSpeed: 3
   _lifeTime: 3
 --- !u!136 &6307704202883038557
 CapsuleCollider:
