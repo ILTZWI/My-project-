@@ -8,11 +8,10 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float _runSpeed;
     [SerializeField] private float _lifeTime;
 
+    private Transform _destination;
     private Rigidbody _rigidbody;
     private Coroutine _coroutine;
     private WaitForSeconds _wait;
-
-    private float _direction;
 
     private bool _isTouched = false;
 
@@ -40,9 +39,9 @@ public class Enemy : MonoBehaviour
         StopDelayedDeleteion();
     }
 
-    public void SetDirection(float direction)
+    public void Destination(Transform transform)
     {
-        _direction = direction;
+        _destination = transform;
     }
 
     public void ClearParameters()
@@ -76,13 +75,16 @@ public class Enemy : MonoBehaviour
 
     private void Move()
     {
-        Vector3 direction = _runSpeed * transform.forward;
+        Vector3 direction = _runSpeed * _destination.transform.position.normalized;
         _rigidbody.linearVelocity = direction;
     }
 
     private void Rotate()
     {
-        gameObject.transform.rotation = Quaternion.Euler(0, _direction, 0);
+        if (_destination == null)
+            return;
+
+        gameObject.transform.LookAt(_destination);
     }
 
     private IEnumerator DelayedDeleteion()
