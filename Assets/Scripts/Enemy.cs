@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Data;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -26,7 +27,6 @@ public class Enemy : MonoBehaviour
     private void Update()
     {
         Move();
-        Rotate();
     }
 
     private void OnEnable()
@@ -60,7 +60,7 @@ public class Enemy : MonoBehaviour
 
     public void StopDelayedDeleteion()
     {
-        if( _coroutine != null)
+        if (_coroutine != null)
             StopCoroutine(DelayedDeleteion());
     }
 
@@ -75,16 +75,15 @@ public class Enemy : MonoBehaviour
 
     private void Move()
     {
-        Vector3 direction = _runSpeed * _destination.transform.position.normalized;
-        _rigidbody.linearVelocity = direction;
-    }
-
-    private void Rotate()
-    {
         if (_destination == null)
             return;
 
-        gameObject.transform.LookAt(_destination);
+        Vector3 direction = (_destination.position - transform.position).normalized;
+
+        Quaternion lookRotation = Quaternion.LookRotation(direction);
+        _rigidbody.MoveRotation(lookRotation);
+
+        _rigidbody.AddForce(direction * _runSpeed, ForceMode.Force);
     }
 
     private IEnumerator DelayedDeleteion()

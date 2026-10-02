@@ -4,7 +4,6 @@ using UnityEngine.Pool;
 
 public class SpawnerEnemy : MonoBehaviour
 {
-    [SerializeField] private Transform[] _spawnPositions;
     [SerializeField] private Transform _destination;
     [SerializeField] private Enemy _prefabEnemy;
     [SerializeField] private float _delay;
@@ -50,11 +49,8 @@ public class SpawnerEnemy : MonoBehaviour
 
     private void Spawn()
     {
-        foreach (Transform position in _spawnPositions)
-        {
-            _spawnPosition = position;
+            _spawnPosition = gameObject.transform;
             _enemyPool.Get();
-        }
     }
 
     private void Destroy(Enemy enemy)
