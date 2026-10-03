@@ -1,16 +1,29 @@
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class Mover : MonoBehaviour
 {
-    [SerializeField] private Transform AllPlacespoint;
     [SerializeField] private float _moveSpeed;
+    [SerializeField] private Transform _target;
+    [SerializeField] private Transform _startPosition;
 
-    private Transform[] arrayPlaces;
-    private int _numberOfPlaceInArrayPlaces;
+    private Rigidbody _rigidbody;
+    private Coroutine _coroutine;
+    private WaitForSeconds _wait;
+
+    private float _delay = 15;
+
+    private void Awake()
+    {
+        _wait = new WaitForSeconds(_delay);
+        _rigidbody = GetComponent<Rigidbody>();
+    }
 
     private void Start()
     {
-        CreateArray();
+        StartReturnPosition();
     }
 
     private void Update()
@@ -18,31 +31,35 @@ public class Mover : MonoBehaviour
         Move();
     }
 
-    private void CreateArray()
-    {
-        arrayPlaces = new Transform[AllPlacespoint.childCount];
-
-        for (int i = 0; i < AllPlacespoint.childCount; i++)
-            arrayPlaces[i] = AllPlacespoint.GetChild(i).GetComponent<Transform>();
-    }
-
     private void Move()
     {
-        var pointByNumberInArray = arrayPlaces[_numberOfPlaceInArrayPlaces];
-        transform.position = Vector3.MoveTowards(transform.position, pointByNumberInArray.position, _moveSpeed * Time.deltaTime);
+        Vector3 direction = (_target.position - transform.position).normalized;
 
-        if (transform.position == pointByNumberInArray.position) NextPlaceTakerLogic();
+        Quaternion lookRotation = Quaternion.LookRotation(direction);
+        _rigidbody.MoveRotation(lookRotation);
+
+        _rigidbody.AddForce(direction * _moveSpeed, ForceMode.Force);
     }
 
-    private Vector3 NextPlaceTakerLogic()
+    private void StartReturnPosition()
     {
-        _numberOfPlaceInArrayPlaces++;
+        _coroutine = StartCoroutine(ChangePositionDelayed());
+    }
 
-        if (_numberOfPlaceInArrayPlaces == arrayPlaces.Length)
-            _numberOfPlaceInArrayPlaces = 0;
+    private void ReturnStartPosition()
+    {
+        transform.position = _startPosition.position;
+    }
 
-        var thisPointVector = arrayPlaces[_numberOfPlaceInArrayPlaces].transform.position;
-        transform.forward = thisPointVector - transform.position;
-        return thisPointVector;
+    private IEnumerator ChangePositionDelayed()
+    {
+        bool isRun = true;
+
+        while (isRun)
+        {
+            yield return _wait;
+
+            ReturnStartPosition();
+        }
     }
 }
