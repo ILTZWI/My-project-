@@ -4,7 +4,7 @@ using UnityEngine;
 public class VolumeController : MonoBehaviour
 {
     [SerializeField] private AudioSource _audioSource;
-    
+
     [SerializeField] private Signaling _signaling;
     [SerializeField] private float _rateOfChange;
 
@@ -59,6 +59,6 @@ public class VolumeController : MonoBehaviour
 
     private void DownVolume()
     {
-        _audioSource.volume = 0;
+        _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, _signalizeTargetOff, _rateOfChange * Time.deltaTime);
     }
 }

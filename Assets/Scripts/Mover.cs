@@ -10,56 +10,63 @@ public class Mover : MonoBehaviour
     [SerializeField] private Transform _startPosition;
 
     private Rigidbody _rigidbody;
-    private Coroutine _coroutine;
-    private WaitForSeconds _wait;
 
     private float _delay = 15;
 
+    private bool _isLocatedHome = false;
+
     private void Awake()
     {
-        _wait = new WaitForSeconds(_delay);
         _rigidbody = GetComponent<Rigidbody>();
-    }
-
-    private void Start()
-    {
-        StartReturnPosition();
     }
 
     private void Update()
     {
-        Move();
+        MoveEnemy();
     }
 
-    private void Move()
+    private void MoveEnemy()
     {
-        Vector3 direction = (_target.position - transform.position).normalized;
+        if (_isLocatedHome)
+        {
+            Move(_startPosition);
+            if (Vector3.Distance(_startPosition.position,transform.position) < 1f)
+            {
+                _isLocatedHome = false;
+            }
+        }
+        else
+        {
+            Vector3 direction = (_target.position - transform.position).normalized;
 
-        Quaternion lookRotation = Quaternion.LookRotation(direction);
-        _rigidbody.MoveRotation(lookRotation);
+            Quaternion lookRotation = Quaternion.LookRotation(direction);
+            _rigidbody.MoveRotation(lookRotation);
 
+            _rigidbody.AddForce(direction * _moveSpeed, ForceMode.Force);
+
+            if (Vector3.Distance(_target.position, transform.position) < 1f)
+            {
+                _isLocatedHome = true;
+                ClearSpeed();
+            }
+        }
+    }
+
+    private void ClearSpeed()
+    {
+        _rigidbody.linearVelocity = Vector3.zero;
+    }
+
+    private void Move(Transform target)
+    {
+        Vector3 direction = (target.position - transform.position).normalized;
         _rigidbody.AddForce(direction * _moveSpeed, ForceMode.Force);
-    }
-
-    private void StartReturnPosition()
-    {
-        _coroutine = StartCoroutine(ChangePositionDelayed());
     }
 
     private void ReturnStartPosition()
     {
-        transform.position = _startPosition.position;
-    }
+        Vector3 direction = (_startPosition.position - transform.position).normalized;
 
-    private IEnumerator ChangePositionDelayed()
-    {
-        bool isRun = true;
-
-        while (isRun)
-        {
-            yield return _wait;
-
-            ReturnStartPosition();
-        }
+        _rigidbody.AddForce(direction * _moveSpeed, ForceMode.Force);
     }
 }
