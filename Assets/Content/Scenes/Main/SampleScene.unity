@@ -768,7 +768,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c926db874a20db24cb530242004f976b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Mover
-  _moveSpeed: 3
+  _moveSpeed: 5
   _target: {fileID: 1362108399}
   _startPosition: {fileID: 715042232}
 --- !u!54 &421341743
@@ -2804,7 +2804,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c926db874a20db24cb530242004f976b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Mover
-  _moveSpeed: 3
+  _moveSpeed: 5
   _target: {fileID: 1362108399}
   _startPosition: {fileID: 1118745334}
 --- !u!54 &1858459531

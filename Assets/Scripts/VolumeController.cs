@@ -1,4 +1,4 @@
-using UnityEditor.Media;
+using System.Collections;
 using UnityEngine;
 
 public class VolumeController : MonoBehaviour
@@ -10,13 +10,9 @@ public class VolumeController : MonoBehaviour
 
     private float _signalizeTargetOn = 1;
     private float _signalizeTargetOff = 0;
+    private float _violators = 0;
 
-    private int _violators = 0;
-
-    private void Update()
-    {
-        ChangeVolume();
-    }
+    private Coroutine _coroutine;
 
     private void OnEnable()
     {
@@ -33,32 +29,40 @@ public class VolumeController : MonoBehaviour
     private void OnEntered()
     {
         _violators++;
+        SetVolume();
     }
 
     private void OnOuted()
     {
         _violators--;
+        SetVolume();
     }
 
-    private void ChangeVolume()
+    private void SetVolume()
     {
         if (_violators == 0)
         {
-            DownVolume();
+            StartCoroutine(_signalizeTargetOff,_rateOfChange);
         }
         else
         {
-            UpVolume();
+            float rate = _rateOfChange * _violators;
+
+            StartCoroutine(_signalizeTargetOn,rate);
         }
     }
 
-    private void UpVolume()
+    private void StartCoroutine(float targetVolume,float rate)
     {
-        _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, _signalizeTargetOn, (_rateOfChange * _violators) * Time.deltaTime);
+        _coroutine = StartCoroutine(ChangeVolume(targetVolume,rate));
     }
 
-    private void DownVolume()
+    private IEnumerator ChangeVolume(float targetVolume, float rate)
     {
-        _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, _signalizeTargetOff, _rateOfChange * Time.deltaTime);
+        while (_audioSource.volume != targetVolume)
+        {
+            _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, targetVolume, rate * Time.deltaTime);
+            yield return null;
+        }
     }
 }

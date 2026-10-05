@@ -9,7 +9,7 @@ public class Mover : MonoBehaviour
 
     private Rigidbody _rigidbody;
 
-    private bool _isLocatedHome = false;
+    private bool _isHeadingHome = true;
 
     private void Awake()
     {
@@ -23,22 +23,21 @@ public class Mover : MonoBehaviour
 
     private void MoveEnemy()
     {
-        if (_isLocatedHome)
-        {
-            Move(_startPosition);
+        Transform target;
 
-            if (Vector3.Distance(_startPosition.position, transform.position) < 1f)
-                _isLocatedHome = false;
-                ClearSpeed();
+        if (_isHeadingHome)
+        {
+            target = _target;
         }
         else
         {
-            Move(_target);
-
-            if (Vector3.Distance(_target.position, transform.position) < 1f)
-                _isLocatedHome = true;
-                ClearSpeed();
+            target = _startPosition;
         }
+
+        Move(target);
+
+        if (CompareDistance(target) < 1)
+            _isHeadingHome = _isHeadingHome ? false : true;
     }
 
     private void ClearSpeed()
@@ -54,5 +53,11 @@ public class Mover : MonoBehaviour
         _rigidbody.MoveRotation(lookRotation);
 
         _rigidbody.linearVelocity = direction * _moveSpeed;
+    }
+
+    private float CompareDistance(Transform target)
+    {
+        float distance = (transform.position - target.position).sqrMagnitude;
+        return distance;
     }
 }
